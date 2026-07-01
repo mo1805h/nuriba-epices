@@ -1,0 +1,7 @@
+[build]
+  base = "nuriba-epices"
+  command = "npm run build"
+  publish = "nuriba-epices/.next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
