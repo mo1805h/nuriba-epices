@@ -19,15 +19,17 @@ export default function AdminDashboardPage() {
   const [tab, setTab] = useState<AdminTab>("products");
 
   useEffect(() => {
-    if (!isAdminLoggedIn()) {
-      router.replace("/admin/login");
-    } else {
-      setChecked(true);
-    }
+    isAdminLoggedIn().then((loggedIn) => {
+      if (!loggedIn) {
+        router.replace("/admin/login");
+      } else {
+        setChecked(true);
+      }
+    });
   }, [router]);
 
-  function handleLogout() {
-    logoutAdmin();
+  async function handleLogout() {
+    await logoutAdmin();
     router.push("/admin/login");
   }
 
@@ -64,7 +66,7 @@ export default function AdminDashboardPage() {
           </Link>
           <button
             onClick={() => {
-              if (confirm("Réinitialiser toutes les données aux valeurs par défaut ?")) {
+              if (confirm("Réinitialiser le contenu du site (accueil, contact, promotions) aux valeurs par défaut ? Les produits ne sont pas concernés.")) {
                 resetToDefaults();
               }
             }}

@@ -16,7 +16,7 @@ const FILTERS: { value: ProductCategory | "all"; label: string }[] = [
 ];
 
 function ProductsContent() {
-  const { products } = useSettings();
+  const { products, productsLoading } = useSettings();
   const searchParams = useSearchParams();
   const initialCategory =
     (searchParams.get("categorie") as ProductCategory | null) ?? "all";
@@ -82,7 +82,7 @@ function ProductsContent() {
 
         {filtered.length === 0 ? (
           <p className="py-16 text-center text-muted">
-            Aucun produit trouvé.
+            {productsLoading ? "Chargement..." : "Aucun produit trouvé."}
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">

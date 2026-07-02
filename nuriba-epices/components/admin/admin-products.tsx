@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Product, ProductBadge, ProductCategory } from "@/types";
 import { useSettings } from "@/context/settings-context";
 import { formatFCFA } from "@/lib/utils";
+import ImageUploadField from "@/components/admin/image-upload-field";
 
 const EMPTY_PRODUCT: Product = {
   id: "",
@@ -257,16 +258,12 @@ export default function AdminProducts() {
                 />
               </Field>
 
-              <Field label="Chemin de l'image (dans /public/images)">
-                <input
-                  type="text"
-                  value={editing.image}
-                  onChange={(e) =>
-                    setEditing({ ...editing, image: e.target.value })
-                  }
-                  className="admin-input"
-                />
-              </Field>
+              <ImageUploadField
+                label="Photo du produit"
+                value={editing.image}
+                folder="products"
+                onUploaded={(url) => setEditing({ ...editing, image: url })}
+              />
 
               <label className="flex items-center gap-2 text-sm">
                 <input

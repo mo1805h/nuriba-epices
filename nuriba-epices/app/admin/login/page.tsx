@@ -12,10 +12,14 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const success = loginAdmin(email, password);
+    setLoading(true);
+    setError("");
+    const success = await loginAdmin(email, password);
+    setLoading(false);
     if (success) {
       router.push("/admin/dashboard");
     } else {
@@ -74,17 +78,12 @@ export default function AdminLoginPage() {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-deep-green py-3 text-sm font-bold text-white transition-colors hover:bg-mid-green"
+            disabled={loading}
+            className="w-full rounded-xl bg-deep-green py-3 text-sm font-bold text-white transition-colors hover:bg-mid-green disabled:opacity-60"
           >
-            Se connecter
+            {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>
-
-        <p className="mt-6 rounded-lg bg-cream p-3 text-center text-[11px] leading-relaxed text-muted">
-          Démo Phase 1 — identifiants :<br />
-          <span className="font-mono">admin@nuribaepices.com</span> /{" "}
-          <span className="font-mono">nuriba2026</span>
-        </p>
       </div>
     </main>
   );

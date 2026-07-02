@@ -16,12 +16,13 @@ export default function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
-  const { products } = useSettings();
+  const { products, productsLoading } = useSettings();
   const { addItem } = useCart();
 
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {
+    if (productsLoading) return null;
     notFound();
   }
 
