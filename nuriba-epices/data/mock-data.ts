@@ -3,16 +3,6 @@ import { Product, Bundle, Testimonial, FaqItem, SiteSettings } from "@/types";
 // ---------------------------------------------------------------------------
 // MOCK DATA LAYER
 // ---------------------------------------------------------------------------
-// Everything below simulates what will eventually come from Supabase tables:
-// products, bundles, testimonials, faq_items, site_settings.
-//
-// To connect Supabase later:
-//   1. Create matching tables (see README.md "Future Supabase schema").
-//   2. Replace the exported arrays/object below with async fetchers,
-//      e.g. `export async function getProducts() { return supabase.from('products').select('*') }`
-//   3. Update the few places that import these (mostly Server Components)
-//      to `await` the new fetchers. No component prop shapes need to change.
-// ---------------------------------------------------------------------------
 
 export const products: Product[] = [
   {
@@ -229,6 +219,11 @@ export const siteSettings: SiteSettings = {
   instagramUrl: "https://www.instagram.com/nuribaepice?igsh=aTVtZ3F1dWZrZ3Bo",
   tiktokUrl: "https://www.tiktok.com/@nuriba.pices?_r=1&_t=ZS-97a73lmJy9Y",
   facebookUrl: "https://www.facebook.com/share/18nGjhKoLx/?mibextid=wwXIfr",
+
+  // PROMOTION 1: LAUNCH OFFER
   promoBannerText: "Offre de lancement — 1 300 F → 1 000 F CFA",
   promoBannerActive: true,
+
+  // PROMOTION 2: BUNDLE OFFER
+  bundleBannerActive: true,
 };
