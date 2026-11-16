@@ -1,6 +1,5 @@
 // Core domain types for NURIBA Épices.
-// Designed so a future Supabase integration can map 1:1 onto these shapes
-// (id: string/uuid, snake_case-free, no client-only fields baked in).
+// Designed so a future Supabase integration can map 1:1 onto these shapes.
 
 export type ProductCategory = "base" | "viande" | "melange";
 
@@ -16,8 +15,8 @@ export interface Product {
   category: ProductCategory;
   origin: string;
   weightGrams: number;
-  price: number; // current price in FCFA
-  oldPrice: number | null; // null = no promotion
+  price: number;
+  oldPrice: number | null;
   badge: ProductBadge;
   inStock: boolean;
   usageTags: string[];
@@ -48,7 +47,7 @@ export interface Testimonial {
   name: string;
   location: string;
   message: string;
-  rating: number; // 1-5
+  rating: number;
 }
 
 export interface FaqItem {
@@ -66,15 +65,20 @@ export interface SiteSettings {
   heroImage: string;
   aboutTitle: string;
   aboutText: string;
-  whatsappNumber: string; // digits only, with country code, no +
+  whatsappNumber: string;
   email: string;
   phone: string;
   address: string;
   instagramUrl: string;
   tiktokUrl: string;
   facebookUrl: string;
+
+  // Promotion Banner 1: Launch Offer
   promoBannerText: string;
   promoBannerActive: boolean;
+
+  // Promotion Banner 2: Bundle Offer
+  bundleBannerActive: boolean;
 }
 
 export interface AdminUser {
