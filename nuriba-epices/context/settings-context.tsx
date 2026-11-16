@@ -13,10 +13,7 @@ import { supabase } from "@/lib/supabase";
 
 // ---------------------------------------------------------------------------
 // SETTINGS CONTEXT
-// ---------------------------------------------------------------------------
-// Products and site settings are both read from and written to Supabase
-// (`products` and `site_settings` tables) — this is the CMS-backed source of
-// truth for the whole site and the admin dashboard.
+// Products and site settings are managed through Supabase.
 // ---------------------------------------------------------------------------
 
 interface ProductRow {
@@ -78,6 +75,7 @@ function productToRow(product: Product) {
 
 function productPatchToRow(patch: Partial<Product>) {
   const row: Record<string, unknown> = {};
+
   if (patch.slug !== undefined) row.slug = patch.slug;
   if (patch.name !== undefined) row.name = patch.name;
   if (patch.shortDescription !== undefined)
@@ -93,8 +91,13 @@ function productPatchToRow(patch: Partial<Product>) {
   if (patch.inStock !== undefined) row.in_stock = patch.inStock;
   if (patch.usageTags !== undefined) row.usage_tags = patch.usageTags;
   if (patch.featured !== undefined) row.featured = patch.featured;
+
   return row;
 }
+
+// ---------------------------------------------------------------------------
+// SUPABASE SETTINGS
+// ---------------------------------------------------------------------------
 
 interface SettingsRow {
   site_name: string;
@@ -112,8 +115,11 @@ interface SettingsRow {
   instagram_url: string;
   tiktok_url: string;
   facebook_url: string;
+
+  // Promotional banners
   promo_banner_text: string;
   promo_banner_active: boolean;
+  bundle_banner_active: boolean;
 }
 
 function rowToSettings(row: SettingsRow): SiteSettings {
@@ -133,8 +139,11 @@ function rowToSettings(row: SettingsRow): SiteSettings {
     instagramUrl: row.instagram_url,
     tiktokUrl: row.tiktok_url,
     facebookUrl: row.facebook_url,
+
+    // Promotional banners
     promoBannerText: row.promo_banner_text,
     promoBannerActive: row.promo_banner_active,
+    bundleBannerActive: row.bundle_banner_active ?? true,
   };
 }
 
@@ -155,10 +164,17 @@ function settingsToRow(settings: SiteSettings) {
     instagram_url: settings.instagramUrl,
     tiktok_url: settings.tiktokUrl,
     facebook_url: settings.facebookUrl,
+
+    // Promotional banners
     promo_banner_text: settings.promoBannerText,
     promo_banner_active: settings.promoBannerActive,
+    bundle_banner_active: settings.bundleBannerActive,
   };
 }
+
+// ---------------------------------------------------------------------------
+// CONTEXT INTERFACE
+// ---------------------------------------------------------------------------
 
 interface SettingsContextValue {
   settings: SiteSettings;
@@ -175,38 +191,52 @@ const SettingsContext = createContext<SettingsContextValue | undefined>(
   undefined
 );
 
+// ---------------------------------------------------------------------------
+// SETTINGS PROVIDER
+// ---------------------------------------------------------------------------
+
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>(initialSettings);
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [hydrated, setHydrated] = useState(false);
 
+  // Load settings from Supabase
   useEffect(() => {
     let cancelled = false;
+
     async function loadSettings() {
       const { data, error } = await supabase
         .from("site_settings")
         .select("*")
         .eq("id", 1)
         .maybeSingle();
+
       if (cancelled) return;
+
       if (error) {
-        console.error("Erreur de chargement des réglages :", error.message);
+        console.error(
+          "Erreur de chargement des réglages :",
+          error.message
+        );
       } else if (data) {
         setSettings(rowToSettings(data));
       }
+
       setHydrated(true);
     }
+
     loadSettings();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Debounced background save: typing stays instant, the DB write happens
-  // shortly after the admin stops typing rather than on every keystroke.
+  // Automatically save settings to Supabase
   useEffect(() => {
     if (!hydrated) return;
+
     const timeout = setTimeout(() => {
       supabase
         .from("site_settings")
@@ -214,76 +244,114 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         .eq("id", 1)
         .then(({ error }) => {
           if (error) {
-            console.error("Erreur de sauvegarde des réglages :", error.message);
+            console.error(
+              "Erreur de sauvegarde des réglages :",
+              error.message
+            );
           }
         });
     }, 600);
+
     return () => clearTimeout(timeout);
   }, [settings, hydrated]);
 
+  // Load products
   useEffect(() => {
     let cancelled = false;
+
     async function loadProducts() {
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .order("sort_order", { ascending: true });
+
       if (cancelled) return;
+
       if (error) {
-        console.error("Erreur de chargement des produits :", error.message);
+        console.error(
+          "Erreur de chargement des produits :",
+          error.message
+        );
       } else {
         setProducts((data ?? []).map(rowToProduct));
       }
+
       setProductsLoading(false);
     }
+
     loadProducts();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
+  // Update settings independently
   function updateSettings(patch: Partial<SiteSettings>) {
-    setSettings((prev) => ({ ...prev, ...patch }));
+    setSettings((prev) => ({
+      ...prev,
+      ...patch,
+    }));
   }
 
+  // Update product
   async function updateProduct(id: string, patch: Partial<Product>) {
     const { error } = await supabase
       .from("products")
       .update(productPatchToRow(patch))
       .eq("id", id);
+
     if (error) {
-      alert("Erreur : impossible de mettre à jour le produit. " + error.message);
+      alert(
+        "Erreur : impossible de mettre à jour le produit. " +
+          error.message
+      );
       return;
     }
+
     setProducts((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...patch } : p))
     );
   }
 
+  // Add product
   async function addProduct(product: Product) {
     const { data, error } = await supabase
       .from("products")
       .insert(productToRow(product))
       .select()
       .single();
+
     if (error || !data) {
       alert(
-        "Erreur : impossible d'ajouter le produit. " + (error?.message ?? "")
+        "Erreur : impossible d'ajouter le produit. " +
+          (error?.message ?? "")
       );
       return;
     }
+
     setProducts((prev) => [...prev, rowToProduct(data)]);
   }
 
+  // Delete product
   async function deleteProduct(id: string) {
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", id);
+
     if (error) {
-      alert("Erreur : impossible de supprimer le produit. " + error.message);
+      alert(
+        "Erreur : impossible de supprimer le produit. " +
+          error.message
+      );
       return;
     }
+
     setProducts((prev) => prev.filter((p) => p.id !== id));
   }
 
+  // Reset settings
   function resetToDefaults() {
     setSettings(initialSettings);
   }
@@ -306,9 +374,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// CUSTOM HOOK
+// ---------------------------------------------------------------------------
+
 export function useSettings() {
   const ctx = useContext(SettingsContext);
-  if (!ctx)
-    throw new Error("useSettings must be used within a SettingsProvider");
+
+  if (!ctx) {
+    throw new Error(
+      "useSettings must be used within a SettingsProvider"
+    );
+  }
+
   return ctx;
 }
