@@ -1,11 +1,12 @@
 "use client";
 
-export type AdminTab = "products" | "promotions" | "homepage" | "contact";
+export type AdminTab = "products" | "promotions" | "homepage" | "reviews" | "contact";
 
 const TABS: { id: AdminTab; label: string; icon: string }[] = [
   { id: "products", label: "Produits", icon: "📦" },
   { id: "promotions", label: "Promotions", icon: "🔥" },
   { id: "homepage", label: "Page d'accueil", icon: "🏠" },
+  { id: "reviews", label: "Avis clients", icon: "⭐" },
   { id: "contact", label: "Contact & Réseaux", icon: "⚙️" },
 ];
 

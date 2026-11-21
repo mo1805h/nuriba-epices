@@ -11,6 +11,7 @@ import AdminProducts from "@/components/admin/admin-products";
 import AdminPromotions from "@/components/admin/admin-promotions";
 import AdminHomepage from "@/components/admin/admin-homepage";
 import AdminContact from "@/components/admin/admin-contact";
+import AdminReviews from "@/components/admin/admin-reviews";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -89,6 +90,7 @@ export default function AdminDashboardPage() {
         {tab === "products" && <AdminProducts />}
         {tab === "promotions" && <AdminPromotions />}
         {tab === "homepage" && <AdminHomepage />}
+        {tab === "reviews" && <AdminReviews />}
         {tab === "contact" && <AdminContact />}
       </main>
     </div>
