@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/track";
 import Image from "next/image";
 import Link from "next/link";
 import { useSettings } from "@/context/settings-context";
@@ -73,6 +74,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`https://wa.me/${settings.whatsappNumber}`}
+                  onClick={() => track("whatsapp_contact")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#c9a84c] transition-colors"

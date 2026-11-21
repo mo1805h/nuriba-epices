@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/track";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/layout/header";
@@ -19,6 +20,9 @@ export default function CartPage() {
       items,
       totalPrice
     );
+    track("whatsapp_order", {
+      items: items.map((it) => ({ name: it.name, quantity: it.quantity })),
+    });
     window.open(url, "_blank");
   }
 

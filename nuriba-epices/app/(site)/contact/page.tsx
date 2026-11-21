@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/track";
 import { useState } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -14,6 +15,7 @@ export default function ContactPage() {
     e.preventDefault();
     const text = `Bonjour NURIBA,\n\nJe m'appelle ${name || "—"}.\n\n${message}`;
     const url = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(text)}`;
+    track("whatsapp_contact");
     window.open(url, "_blank");
   }
 
@@ -56,6 +58,7 @@ export default function ContactPage() {
             </div>
             <a
               href={`https://wa.me/${settings.whatsappNumber}`}
+              onClick={() => track("whatsapp_contact")}
               target="_blank"
               rel="noopener noreferrer"
               className="block rounded-2xl bg-mid-green p-6 text-center text-white transition-colors hover:bg-deep-green"

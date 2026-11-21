@@ -1,10 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { faqItems } from "@/data/mock-data";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+interface FaqRow {
+  id: string;
+  question: string;
+  answer: string;
+}
 
 export default function Faq() {
-  const [openId, setOpenId] = useState<string | null>(faqItems[0]?.id ?? null);
+  const [faqItems, setFaqItems] = useState<FaqRow[]>([]);
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase
+      .from("faq_items")
+      .select("id,question,answer")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        const rows = (data as FaqRow[]) ?? [];
+        setFaqItems(rows);
+        setOpenId(rows[0]?.id ?? null);
+      });
+  }, []);
+
+  if (faqItems.length === 0) return null;
 
   return (
     <section className="bg-white px-5 py-16 md:px-8">

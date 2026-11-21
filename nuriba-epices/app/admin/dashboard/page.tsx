@@ -12,12 +12,14 @@ import AdminPromotions from "@/components/admin/admin-promotions";
 import AdminHomepage from "@/components/admin/admin-homepage";
 import AdminContact from "@/components/admin/admin-contact";
 import AdminReviews from "@/components/admin/admin-reviews";
+import AdminStats from "@/components/admin/admin-stats";
+import AdminFaq from "@/components/admin/admin-faq";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const { settings, resetToDefaults } = useSettings();
   const [checked, setChecked] = useState(false);
-  const [tab, setTab] = useState<AdminTab>("products");
+  const [tab, setTab] = useState<AdminTab>("stats");
 
   useEffect(() => {
     isAdminLoggedIn().then((loggedIn) => {
@@ -87,9 +89,11 @@ export default function AdminDashboardPage() {
       <AdminTabs active={tab} onChange={setTab} />
 
       <main>
+        {tab === "stats" && <AdminStats />}
         {tab === "products" && <AdminProducts />}
         {tab === "promotions" && <AdminPromotions />}
         {tab === "homepage" && <AdminHomepage />}
+        {tab === "faq" && <AdminFaq />}
         {tab === "reviews" && <AdminReviews />}
         {tab === "contact" && <AdminContact />}
       </main>

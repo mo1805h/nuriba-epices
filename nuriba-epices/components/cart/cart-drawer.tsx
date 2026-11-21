@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/track";
 import { useState } from "react";
 import Image from "next/image";
 import { useCart } from "@/context/cart-context";
@@ -96,6 +97,9 @@ export default function CartDrawer() {
 
       const message = buildCustomMessage(name, orderNumber);
       const url = buildWhatsAppUrl(settings.whatsappNumber, message);
+      track("whatsapp_order", {
+        items: items.map((it) => ({ name: it.name, quantity: it.quantity })),
+      });
       window.open(url, "_blank");
 
       setShowCheckout(false);

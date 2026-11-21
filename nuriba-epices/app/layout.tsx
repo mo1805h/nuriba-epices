@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/cart-context";
 import { SettingsProvider } from "@/context/settings-context";
+import PageTracker from "@/components/analytics/page-tracker";
 import { JsonLd, SITE_URL, absoluteUrl, getSeoSettings } from "@/lib/seo";
 
 // NOTE: next/font/google requires network access at build time to fetch
@@ -84,6 +85,7 @@ export default async function RootLayout({
     <html lang="fr">
       <body className="font-sans antialiased bg-[#FAF7F2] text-[#1C1C1C]">
         <JsonLd data={storeData} />
+        <PageTracker />
         <SettingsProvider>
           <CartProvider>{children}</CartProvider>
         </SettingsProvider>

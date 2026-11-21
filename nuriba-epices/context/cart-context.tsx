@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/track";
 import {
   createContext,
   useContext,
@@ -51,6 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   function addItem(product: Product, quantity = 1) {
+    track("add_to_cart", { items: [{ name: product.name, quantity }] });
     setItems((prev) => {
       const existing = prev.find((i) => i.productId === product.id);
       if (existing) {
