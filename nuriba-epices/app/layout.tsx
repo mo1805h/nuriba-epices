@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/cart-context";
 import { SettingsProvider } from "@/context/settings-context";
+import { getTheme, themeCss } from "@/lib/themes";
 import PageTracker from "@/components/analytics/page-tracker";
 import { JsonLd, SITE_URL, absoluteUrl, getSeoSettings } from "@/lib/seo";
 
@@ -83,7 +84,13 @@ export default async function RootLayout({
   };
   return (
     <html lang="fr">
-      <body className="font-sans antialiased bg-[#FAF7F2] text-[#1C1C1C]">
+      <head>
+        <style
+          id="nuriba-theme"
+          dangerouslySetInnerHTML={{ __html: themeCss(getTheme(settings?.theme)) }}
+        />
+      </head>
+      <body className="font-sans antialiased bg-page text-[#1C1C1C]">
         <JsonLd data={storeData} />
         <PageTracker />
         <SettingsProvider>

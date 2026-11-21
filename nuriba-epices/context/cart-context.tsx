@@ -9,6 +9,7 @@ import {
   ReactNode,
 } from "react";
 import { CartItem, Product } from "@/types";
+import { useSettings } from "@/context/settings-context";
 
 interface CartContextValue {
   items: CartItem[];
@@ -28,7 +29,13 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const STORAGE_KEY = "nuriba-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { products, getPricing } = useSettings();
+  const [storedItems, setItems] = useState<CartItem[]>([]);
+  // Prices always follow the current product price + running promotions
+  const items: CartItem[] = storedItems.map((i) => {
+    const p = products.find((x) => x.id === i.productId);
+    return p ? { ...i, price: getPricing(p).price, name: p.name, image: p.image } : i;
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
@@ -48,8 +55,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Persist on change
   useEffect(() => {
     if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, hydrated]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storedItems));
+  }, [storedItems, hydrated]);
 
   function addItem(product: Product, quantity = 1) {
     track("add_to_cart", { items: [{ name: product.name, quantity }] });
@@ -67,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         {
           productId: product.id,
           name: product.name,
-          price: product.price,
+          price: getPricing(product).price,
           image: product.image,
           quantity,
         },

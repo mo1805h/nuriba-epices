@@ -1,15 +1,20 @@
 "use client";
 
 import { useSettings } from "@/context/settings-context";
+import AdminPromotionManager from "@/components/admin/admin-promotion-manager";
 
 export default function AdminPromotions() {
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="max-w-xl p-6">
-      <h2 className="font-display mb-5 text-xl font-bold text-deep-green">
+    <div className="max-w-3xl space-y-8 p-6">
+      <h2 className="font-display text-xl font-bold text-deep-green">
         Promotions
       </h2>
+
+      <AdminPromotionManager />
+
+      <h3 className="font-display text-lg font-bold text-deep-green">Bannières fixes</h3>
 
       <div className="space-y-6 rounded-2xl border border-border-soft bg-white p-5">
 
@@ -30,12 +35,12 @@ export default function AdminPromotions() {
                 })
               }
             />
-            Display the launch promotional banner on the site
+            Afficher la bannière « Offre de lancement »
           </label>
 
           <div>
             <label className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-muted">
-              Launch banner text
+              Texte de la bannière de lancement
             </label>
 
             <input
@@ -72,7 +77,7 @@ export default function AdminPromotions() {
                 })
               }
             />
-            Display the bundle promotional banner on the site
+            Afficher la bannière « Pack »
           </label>
 
           <p className="rounded-lg bg-cream p-3 text-xs leading-relaxed text-muted">

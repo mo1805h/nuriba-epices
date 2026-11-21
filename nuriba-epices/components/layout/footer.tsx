@@ -33,7 +33,7 @@ export default function Footer() {
   const { settings } = useSettings();
 
   return (
-    <footer className="bg-[#1a2e1f] text-white/60">
+    <footer className="bg-ink text-white/60">
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div>
@@ -57,7 +57,7 @@ export default function Footer() {
                 { href: "/contact", label: "Contact" },
               ].map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-[#c9a84c] transition-colors">
+                  <Link href={l.href} className="hover:text-gold transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -77,7 +77,7 @@ export default function Footer() {
                   onClick={() => track("whatsapp_contact")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#c9a84c] transition-colors"
+                  className="hover:text-gold transition-colors"
                 >
                   💬 WhatsApp
                 </a>
@@ -120,7 +120,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-white/30">
-          <span className="text-[#c9a84c]">{settings.siteName}</span> — {settings.tagline} · {settings.address}
+          <span className="text-gold">{settings.siteName}</span> — {settings.tagline} · {settings.address}
         </div>
       </div>
     </footer>

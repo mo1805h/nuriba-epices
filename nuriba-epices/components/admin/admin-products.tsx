@@ -6,6 +6,7 @@ import { Product, ProductBadge, ProductCategory } from "@/types";
 import { useSettings } from "@/context/settings-context";
 import { formatFCFA } from "@/lib/utils";
 import ImageUploadField from "@/components/admin/image-upload-field";
+import GalleryUploadField from "@/components/admin/gallery-upload-field";
 
 const EMPTY_PRODUCT: Product = {
   id: "",
@@ -14,6 +15,7 @@ const EMPTY_PRODUCT: Product = {
   shortDescription: "",
   description: "",
   image: "/images/maji.jpg",
+  images: [],
   category: "base",
   origin: "Importé de Turquie",
   weightGrams: 50,
@@ -259,10 +261,15 @@ export default function AdminProducts() {
               </Field>
 
               <ImageUploadField
-                label="Photo du produit"
+                label="Photo principale du produit"
                 value={editing.image}
                 folder="products"
                 onUploaded={(url) => setEditing({ ...editing, image: url })}
+              />
+
+              <GalleryUploadField
+                value={editing.images ?? []}
+                onChange={(urls) => setEditing({ ...editing, images: urls })}
               />
 
               <label className="flex items-center gap-2 text-sm">

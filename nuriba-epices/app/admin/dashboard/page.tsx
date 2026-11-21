@@ -14,6 +14,7 @@ import AdminContact from "@/components/admin/admin-contact";
 import AdminReviews from "@/components/admin/admin-reviews";
 import AdminStats from "@/components/admin/admin-stats";
 import AdminFaq from "@/components/admin/admin-faq";
+import AdminTheme from "@/components/admin/admin-theme";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -93,6 +94,7 @@ export default function AdminDashboardPage() {
         {tab === "products" && <AdminProducts />}
         {tab === "promotions" && <AdminPromotions />}
         {tab === "homepage" && <AdminHomepage />}
+        {tab === "theme" && <AdminTheme />}
         {tab === "faq" && <AdminFaq />}
         {tab === "reviews" && <AdminReviews />}
         {tab === "contact" && <AdminContact />}

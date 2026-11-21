@@ -1,11 +1,12 @@
 "use client";
 
-export type AdminTab = "stats" | "products" | "promotions" | "homepage" | "faq" | "reviews" | "contact";
+export type AdminTab = "stats" | "products" | "promotions" | "theme" | "homepage" | "faq" | "reviews" | "contact";
 
 const TABS: { id: AdminTab; label: string; icon: string }[] = [
   { id: "stats", label: "Statistiques", icon: "📊" },
   { id: "products", label: "Produits", icon: "📦" },
   { id: "promotions", label: "Promotions", icon: "🔥" },
+  { id: "theme", label: "Thème", icon: "🎨" },
   { id: "homepage", label: "Page d'accueil", icon: "🏠" },
   { id: "faq", label: "FAQ", icon: "❓" },
   { id: "reviews", label: "Avis clients", icon: "⭐" },

@@ -3,13 +3,37 @@
 import { useSettings } from "@/context/settings-context";
 import { bundles } from "@/data/mock-data";
 import { formatFCFA } from "@/lib/utils";
+import Link from "next/link";
+import { isRunning } from "@/lib/promotions";
 
 export default function PromoBanner() {
-  const { settings } = useSettings();
+  const { settings, promotions } = useSettings();
+  const running = promotions.filter((p) => isRunning(p) && p.show_banner);
   const bundle = bundles[0];
 
   return (
     <section className="mx-auto max-w-7xl px-5 pt-6 md:px-8">
+      {running.map((p) => (
+        <Link
+          key={p.id}
+          href="/produits"
+          className="mb-3 flex flex-col items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-deep-green to-spice px-6 py-4 text-center transition-transform hover:scale-[1.01] sm:flex-row sm:text-left"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔥</span>
+            <div>
+              <p className="text-sm font-bold text-white">{p.title}</p>
+              {p.description && <p className="text-xs text-white/85">{p.description}</p>}
+              {p.ends_at && (
+                <p className="text-[11px] text-white/70">
+                  Jusqu&apos;au {new Date(p.ends_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}
+                </p>
+              )}
+            </div>
+          </div>
+          <span className="rounded-full bg-gold px-4 py-1.5 text-sm font-bold text-deep-green">-{p.percent}% · J&apos;en profite</span>
+        </Link>
+      ))}
 
       {/* PROMOTION 1: LAUNCH OFFER */}
       {settings.promoBannerActive && (

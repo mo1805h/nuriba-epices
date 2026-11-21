@@ -12,6 +12,7 @@ export interface Product {
   shortDescription: string;
   description: string;
   image: string;
+  images: string[];
   category: ProductCategory;
   origin: string;
   weightGrams: number;
@@ -79,6 +80,9 @@ export interface SiteSettings {
 
   // Promotion Banner 2: Bundle Offer
   bundleBannerActive: boolean;
+
+  // Seasonal color theme id (see lib/themes.ts)
+  theme: string;
 }
 
 export interface AdminUser {

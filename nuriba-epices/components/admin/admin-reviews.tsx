@@ -88,7 +88,7 @@ export default function AdminReviews() {
                   {r.name}
                   <span className="ml-2 font-normal text-muted">{r.location}</span>
                 </p>
-                <p className="text-sm text-[#c9a84c]">
+                <p className="text-sm text-gold">
                   {"★".repeat(r.rating)}
                   <span className="text-gray-300">{"★".repeat(5 - r.rating)}</span>
                   <span className="ml-2 text-xs text-muted">

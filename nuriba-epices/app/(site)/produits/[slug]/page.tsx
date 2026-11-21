@@ -1,7 +1,6 @@
 "use client";
 
 import { use } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/layout/header";
@@ -9,6 +8,8 @@ import Footer from "@/components/layout/footer";
 import { useSettings } from "@/context/settings-context";
 import { useCart } from "@/context/cart-context";
 import { formatFCFA } from "@/lib/utils";
+import ProductGallery from "@/components/products/product-gallery";
+import { useState } from "react";
 
 export default function ProductDetailPage({
   params,
@@ -16,7 +17,9 @@ export default function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
-  const { products, productsLoading } = useSettings();
+  const { products, productsLoading, getPricing } = useSettings();
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
   const product = products.find((p) => p.slug === slug);
@@ -25,6 +28,8 @@ export default function ProductDetailPage({
     if (productsLoading) return null;
     notFound();
   }
+
+  const pricing = getPricing(product);
 
   return (
     <>
@@ -38,15 +43,10 @@ export default function ProductDetailPage({
         </Link>
 
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-          <div className="relative h-80 w-full overflow-hidden rounded-2xl md:h-[420px]">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 500px"
-            />
-          </div>
+          <ProductGallery
+            images={[product.image, ...(product.images ?? [])].filter(Boolean)}
+            alt={product.name}
+          />
 
           <div>
             <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-light-green">
@@ -73,23 +73,58 @@ export default function ProductDetailPage({
               ))}
             </div>
 
-            <div className="mt-8 flex items-center gap-4 border-t border-border-soft pt-6">
-              <div>
-                {product.oldPrice && (
-                  <p className="text-sm text-gray-400 line-through">
-                    {formatFCFA(product.oldPrice)}
+            <div className="mt-8 border-t border-border-soft pt-6">
+              <div className="flex items-end gap-3">
+                <p className="font-display text-3xl font-bold text-spice">
+                  {formatFCFA(pricing.price)}
+                </p>
+                {pricing.oldPrice && pricing.oldPrice > pricing.price && (
+                  <p className="pb-1 text-sm text-gray-400 line-through">
+                    {formatFCFA(pricing.oldPrice)}
                   </p>
                 )}
-                <p className="font-display text-3xl font-bold text-spice">
-                  {formatFCFA(product.price)}
-                </p>
+                {pricing.percent > 0 && (
+                  <span className="mb-1.5 rounded-full bg-spice px-2.5 py-0.5 text-xs font-bold text-white">
+                    -{pricing.percent}%
+                  </span>
+                )}
               </div>
-              <button
-                onClick={() => addItem(product)}
-                className="ml-auto rounded-xl bg-deep-green px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-mid-green"
-              >
-                Ajouter au panier
-              </button>
+
+              {product.inStock ? (
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <div className="flex items-center rounded-xl border border-border-soft bg-white">
+                    <button
+                      onClick={() => setQty((q) => Math.max(1, q - 1))}
+                      className="px-4 py-3 text-lg font-bold text-deep-green"
+                      aria-label="Moins"
+                    >
+                      −
+                    </button>
+                    <span className="w-8 text-center font-semibold">{qty}</span>
+                    <button
+                      onClick={() => setQty((q) => Math.min(99, q + 1))}
+                      className="px-4 py-3 text-lg font-bold text-deep-green"
+                      aria-label="Plus"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => {
+                      addItem(product, qty);
+                      setAdded(true);
+                      setTimeout(() => setAdded(false), 2000);
+                    }}
+                    className="flex-1 rounded-xl bg-deep-green px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-mid-green"
+                  >
+                    {added ? "✓ Ajouté au panier" : `Ajouter au panier · ${formatFCFA(pricing.price * qty)}`}
+                  </button>
+                </div>
+              ) : (
+                <p className="mt-5 rounded-xl bg-gray-100 p-4 text-center text-sm font-bold text-gray-500">
+                  Rupture de stock — revenez bientôt
+                </p>
+              )}
             </div>
           </div>
         </div>

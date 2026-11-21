@@ -10,6 +10,8 @@ import {
 import { Product, SiteSettings } from "@/types";
 import { siteSettings as initialSettings } from "@/data/mock-data";
 import { supabase } from "@/lib/supabase";
+import { Promotion, Pricing, pricingFor } from "@/lib/promotions";
+import { applyTheme, getTheme } from "@/lib/themes";
 
 // ---------------------------------------------------------------------------
 // SETTINGS CONTEXT
@@ -23,6 +25,7 @@ interface ProductRow {
   short_description: string;
   description: string;
   image: string;
+  images: string[] | null;
   category: string;
   origin: string;
   weight_grams: number;
@@ -42,6 +45,7 @@ function rowToProduct(row: ProductRow): Product {
     shortDescription: row.short_description,
     description: row.description,
     image: row.image,
+    images: row.images ?? [],
     category: row.category as Product["category"],
     origin: row.origin,
     weightGrams: row.weight_grams,
@@ -61,6 +65,7 @@ function productToRow(product: Product) {
     short_description: product.shortDescription,
     description: product.description,
     image: product.image,
+    images: product.images ?? [],
     category: product.category,
     origin: product.origin,
     weight_grams: product.weightGrams,
@@ -82,6 +87,7 @@ function productPatchToRow(patch: Partial<Product>) {
     row.short_description = patch.shortDescription;
   if (patch.description !== undefined) row.description = patch.description;
   if (patch.image !== undefined) row.image = patch.image;
+  if (patch.images !== undefined) row.images = patch.images;
   if (patch.category !== undefined) row.category = patch.category;
   if (patch.origin !== undefined) row.origin = patch.origin;
   if (patch.weightGrams !== undefined) row.weight_grams = patch.weightGrams;
@@ -120,6 +126,7 @@ interface SettingsRow {
   promo_banner_text: string;
   promo_banner_active: boolean;
   bundle_banner_active: boolean;
+  theme: string | null;
 }
 
 function rowToSettings(row: SettingsRow): SiteSettings {
@@ -144,6 +151,7 @@ function rowToSettings(row: SettingsRow): SiteSettings {
     promoBannerText: row.promo_banner_text,
     promoBannerActive: row.promo_banner_active,
     bundleBannerActive: row.bundle_banner_active ?? true,
+    theme: row.theme ?? "default",
   };
 }
 
@@ -169,6 +177,7 @@ function settingsToRow(settings: SiteSettings) {
     promo_banner_text: settings.promoBannerText,
     promo_banner_active: settings.promoBannerActive,
     bundle_banner_active: settings.bundleBannerActive,
+    theme: settings.theme,
   };
 }
 
@@ -185,6 +194,9 @@ interface SettingsContextValue {
   addProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
   resetToDefaults: () => void;
+  promotions: Promotion[];
+  reloadPromotions: () => Promise<void>;
+  getPricing: (product: Product) => Pricing;
 }
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(
@@ -200,6 +212,28 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [hydrated, setHydrated] = useState(false);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+
+  async function reloadPromotions() {
+    const { data } = await supabase
+      .from("promotions")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setPromotions((data as Promotion[]) ?? []);
+  }
+
+  useEffect(() => {
+    reloadPromotions();
+  }, []);
+
+  // Apply the seasonal color theme whenever it changes
+  useEffect(() => {
+    applyTheme(getTheme(settings.theme));
+  }, [settings.theme]);
+
+  function getPricing(product: Product): Pricing {
+    return pricingFor(product, promotions);
+  }
 
   // Load settings from Supabase
   useEffect(() => {
@@ -367,6 +401,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         addProduct,
         deleteProduct,
         resetToDefaults,
+        promotions,
+        reloadPromotions,
+        getPricing,
       }}
     >
       {children}

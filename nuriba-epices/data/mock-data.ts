@@ -13,6 +13,7 @@ export const products: Product[] = [
     description:
       "Notre Poivre Noir est sélectionné pour son intensité aromatique et sa fraîcheur. Moulu pour révéler toute sa puissance, il accompagne vos viandes, sauces et marinades avec caractère.",
     image: "/images/poivre.jpg",
+    images: [],
     category: "base",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -31,6 +32,7 @@ export const products: Product[] = [
     description:
       "Maji est notre mélange signature, pensé pour sublimer vos plats de tous les jours. Un équilibre d'épices naturelles qui relève riz, légumes, sauces et poissons.",
     image: "/images/maji.jpg",
+    images: [],
     category: "melange",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -49,6 +51,7 @@ export const products: Product[] = [
     description:
       "Un mélange robuste conçu pour sublimer le bœuf, le mouton et les grillades. Profondeur de goût et caractère affirmé pour vos plats de viande.",
     image: "/images/viande.jpg",
+    images: [],
     category: "viande",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -67,6 +70,7 @@ export const products: Product[] = [
     description:
       "Conçu pour le poulet rôti, grillé ou en sauce. Ce mélange doré donne instantanément du caractère à votre volaille, pour un résultat digne d'un restaurant.",
     image: "/images/poulet.jpg",
+    images: [],
     category: "viande",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -85,6 +89,7 @@ export const products: Product[] = [
     description:
       "Un curry doux et parfumé, idéal pour le riz, les légumes et le poulet. Apporte couleur et chaleur à vos préparations du quotidien.",
     image: "/images/curry.jpg",
+    images: [],
     category: "base",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -103,6 +108,7 @@ export const products: Product[] = [
     description:
       "Notre Paprika apporte une belle couleur rouge et une note légèrement fumée à vos plats. Parfait pour les viandes, sauces et omelettes.",
     image: "/images/paprika.jpg",
+    images: [],
     category: "base",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -121,6 +127,7 @@ export const products: Product[] = [
     description:
       "Le Curcuma pur en poudre, reconnu pour ses bienfaits naturels et sa belle teinte dorée. Idéal pour le riz, les légumes et le lait doré.",
     image: "/images/curcuma.jpg",
+    images: [],
     category: "base",
     origin: "Importé de Turquie",
     weightGrams: 50,
@@ -226,4 +233,6 @@ export const siteSettings: SiteSettings = {
 
   // PROMOTION 2: BUNDLE OFFER
   bundleBannerActive: true,
+
+  theme: "default",
 };

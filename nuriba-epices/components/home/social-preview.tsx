@@ -61,10 +61,10 @@ export default function SocialPreview() {
   return (
     <section className="bg-white px-5 py-16 md:px-8">
       <div className="mx-auto max-w-7xl text-center">
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-[#6ab187]">
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-light-green">
           Suivez-nous
         </p>
-        <h2 className="font-display mb-10 text-3xl font-bold text-[#1a2e1f] md:text-4xl">
+        <h2 className="font-display mb-10 text-3xl font-bold text-ink md:text-4xl">
           NURIBA sur les réseaux
         </h2>
 
@@ -75,7 +75,7 @@ export default function SocialPreview() {
               href={urls[s.id] || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group flex flex-col items-center justify-center rounded-2xl border border-[#ede8e0] bg-[#fdfbf8] p-10 text-[#1a2e1f] transition-all hover:-translate-y-1 hover:text-white hover:shadow-lg ${s.color}`}
+              className={`group flex flex-col items-center justify-center rounded-2xl border border-border-soft bg-cream p-10 text-ink transition-all hover:-translate-y-1 hover:text-white hover:shadow-lg ${s.color}`}
             >
               <div className="mb-4 transition-transform group-hover:scale-110">
                 <s.Icon />

@@ -34,13 +34,13 @@ export default function Hero() {
             className="mb-6 h-16 w-auto object-contain brightness-0 invert"
           />
 
-          <p className="animate-fade-up-delay-1 mb-3 text-xs font-bold uppercase tracking-[0.4em] text-[#c9a84c]">
+          <p className="animate-fade-up-delay-1 mb-3 text-xs font-bold uppercase tracking-[0.4em] text-gold">
             {settings.tagline}
           </p>
 
           <h1 className="animate-fade-up-delay-1 font-display text-4xl font-black leading-tight text-white md:text-6xl">
             La saveur qui{" "}
-            <em className="text-[#c9a84c] not-italic font-black italic">
+            <em className="text-gold not-italic font-black italic">
               transforme
             </em>{" "}
             vos plats
@@ -53,7 +53,7 @@ export default function Hero() {
           <div className="animate-fade-up-delay-3 mt-9 flex flex-wrap gap-3">
             <Link
               href="/produits"
-              className="rounded-full bg-[#c9a84c] px-8 py-3.5 text-sm font-bold text-[#1a2e1f] transition-all hover:scale-105 hover:bg-[#d4b85a]"
+              className="rounded-full bg-gold px-8 py-3.5 text-sm font-bold text-ink transition-all hover:scale-105 hover:bg-[#d4b85a]"
             >
               Découvrir nos épices
             </Link>

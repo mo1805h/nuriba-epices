@@ -30,7 +30,7 @@ function StarRating({ rating, onChange }: { rating: number; onChange?: (r: numbe
           key={star}
           type="button"
           onClick={() => onChange?.(star)}
-          className={`text-xl transition-colors ${star <= rating ? "text-[#c9a84c]" : "text-gray-300"} ${onChange ? "cursor-pointer hover:text-[#c9a84c]" : "cursor-default"}`}
+          className={`text-xl transition-colors ${star <= rating ? "text-gold" : "text-gray-300"} ${onChange ? "cursor-pointer hover:text-gold" : "cursor-default"}`}
         >
           ★
         </button>
@@ -106,25 +106,25 @@ export default function Testimonials() {
       : 0;
 
   return (
-    <section className="bg-[#fdfbf8] px-5 py-16 md:px-8">
+    <section className="bg-cream px-5 py-16 md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
           <div>
-            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.3em] text-[#6ab187]">
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.3em] text-light-green">
               Avis clients
             </p>
-            <h2 className="font-display text-3xl font-bold text-[#1a2e1f] md:text-4xl">
+            <h2 className="font-display text-3xl font-bold text-ink md:text-4xl">
               Ils ont adopté NURIBA
             </h2>
             {reviews.length > 0 && (
               <p className="mt-1 text-sm text-[#888]">
-                <span className="text-[#c9a84c]">★</span> {average.toFixed(1)}/5 · {reviews.length} avis
+                <span className="text-gold">★</span> {average.toFixed(1)}/5 · {reviews.length} avis
               </p>
             )}
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="rounded-full border-2 border-[#2d5a3d] px-6 py-2.5 text-sm font-bold text-[#2d5a3d] transition-all hover:bg-[#2d5a3d] hover:text-white"
+            className="rounded-full border-2 border-deep-green px-6 py-2.5 text-sm font-bold text-deep-green transition-all hover:bg-deep-green hover:text-white"
           >
             {showForm ? "Annuler" : "✏️ Laisser un avis"}
           </button>
@@ -132,8 +132,8 @@ export default function Testimonials() {
 
         {/* Add review form */}
         {showForm && (
-          <div className="mb-10 rounded-2xl border border-[#ede8e0] bg-white p-6 shadow-sm">
-            <h3 className="font-display mb-4 text-lg font-bold text-[#1a2e1f]">
+          <div className="mb-10 rounded-2xl border border-border-soft bg-white p-6 shadow-sm">
+            <h3 className="font-display mb-4 text-lg font-bold text-ink">
               Votre avis sur NURIBA
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -157,7 +157,7 @@ export default function Testimonials() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     maxLength={60}
-                    className="w-full rounded-lg border border-[#ede8e0] px-4 py-2.5 text-sm outline-none focus:border-[#2d5a3d]"
+                    className="w-full rounded-lg border border-border-soft px-4 py-2.5 text-sm outline-none focus:border-deep-green"
                     placeholder="Ex: Fatimata K."
                   />
                 </div>
@@ -170,7 +170,7 @@ export default function Testimonials() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     maxLength={60}
-                    className="w-full rounded-lg border border-[#ede8e0] px-4 py-2.5 text-sm outline-none focus:border-[#2d5a3d]"
+                    className="w-full rounded-lg border border-border-soft px-4 py-2.5 text-sm outline-none focus:border-deep-green"
                     placeholder="Ex: Ouagadougou"
                   />
                 </div>
@@ -193,7 +193,7 @@ export default function Testimonials() {
                   onChange={(e) => setMessage(e.target.value)}
                   maxLength={600}
                   rows={3}
-                  className="w-full rounded-lg border border-[#ede8e0] px-4 py-2.5 text-sm outline-none focus:border-[#2d5a3d]"
+                  className="w-full rounded-lg border border-border-soft px-4 py-2.5 text-sm outline-none focus:border-deep-green"
                   placeholder="Partagez votre expérience avec nos épices..."
                 />
               </div>
@@ -205,7 +205,7 @@ export default function Testimonials() {
               <button
                 type="submit"
                 disabled={sending}
-                className="rounded-xl bg-[#2d5a3d] px-8 py-3 text-sm font-bold text-white hover:bg-[#4a8c65] transition-colors disabled:opacity-60"
+                className="rounded-xl bg-deep-green px-8 py-3 text-sm font-bold text-white hover:bg-mid-green transition-colors disabled:opacity-60"
               >
                 {sending ? "Publication…" : "Publier mon avis"}
               </button>
@@ -221,8 +221,8 @@ export default function Testimonials() {
 
         {/* Reviews grid */}
         {!loading && reviews.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-[#ede8e0] bg-white p-10 text-center">
-            <p className="font-display text-lg font-bold text-[#1a2e1f]">
+          <div className="rounded-2xl border border-dashed border-border-soft bg-white p-10 text-center">
+            <p className="font-display text-lg font-bold text-ink">
               Soyez le premier à donner votre avis !
             </p>
             <p className="mt-1 text-sm text-[#888]">
@@ -231,7 +231,7 @@ export default function Testimonials() {
             {!showForm && (
               <button
                 onClick={() => setShowForm(true)}
-                className="mt-4 rounded-full bg-[#2d5a3d] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#4a8c65]"
+                className="mt-4 rounded-full bg-deep-green px-6 py-2.5 text-sm font-bold text-white hover:bg-mid-green"
               >
                 ✏️ Laisser un avis
               </button>
@@ -241,14 +241,14 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {reviews.slice(0, visible).map((r) => (
-            <div key={r.id} className="rounded-2xl border border-[#ede8e0] bg-white p-6 shadow-sm">
+            <div key={r.id} className="rounded-2xl border border-border-soft bg-white p-6 shadow-sm">
               <StarRating rating={r.rating} />
               <p className="mt-3 whitespace-pre-line break-words text-sm leading-relaxed text-[#444] italic">
                 « {r.message} »
               </p>
               <div className="mt-4 flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-[#1a2e1f]">{r.name}</p>
+                  <p className="truncate text-sm font-bold text-ink">{r.name}</p>
                   <p className="truncate text-xs text-[#888]">{r.location}</p>
                 </div>
                 <span className="shrink-0 text-xs text-[#aaa]">{formatDate(r.created_at)}</span>
@@ -261,7 +261,7 @@ export default function Testimonials() {
           <div className="mt-8 text-center">
             <button
               onClick={() => setVisible((v) => v + PAGE_SIZE)}
-              className="rounded-full border-2 border-[#2d5a3d] px-6 py-2.5 text-sm font-bold text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white"
+              className="rounded-full border-2 border-deep-green px-6 py-2.5 text-sm font-bold text-deep-green hover:bg-deep-green hover:text-white"
             >
               Voir plus d&apos;avis
             </button>

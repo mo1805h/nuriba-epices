@@ -10,6 +10,8 @@
   --color-cream: #fdfbf8;
   --color-border: #ede8e0;
   --color-muted: #888;
+  --color-page: #FAF7F2;
+  --color-ink: #1a2e1f;
 
   /* System font stacks */
   --font-playfair: Georgia, "Times New Roman", serif;
@@ -29,6 +31,12 @@
   --color-cream: var(--color-cream);
   --color-border-soft: var(--color-border);
   --color-muted: var(--color-muted);
+  --color-page: var(--color-page);
+  --color-ink: var(--color-ink);
+}
+
+body {
+  transition: background-color 0.3s ease;
 }
 
 html {
@@ -78,4 +86,15 @@ body {
 .thin-scrollbar::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 999px;
+}
+
+/* Admin form labels (promotions manager) */
+.admin-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-muted);
 }

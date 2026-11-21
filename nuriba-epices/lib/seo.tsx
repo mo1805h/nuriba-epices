@@ -28,6 +28,7 @@ export interface SeoSettings {
   tiktok_url: string | null;
   facebook_url: string | null;
   logo: string | null;
+  theme: string | null;
 }
 
 function serverClient() {
@@ -67,7 +68,7 @@ export async function getSeoSettings(): Promise<SeoSettings | null> {
     const { data, error } = await sb
       .from("site_settings")
       .select(
-        "phone,email,address,whatsapp_number,instagram_url,tiktok_url,facebook_url,logo"
+        "phone,email,address,whatsapp_number,instagram_url,tiktok_url,facebook_url,logo,theme"
       )
       .eq("id", 1)
       .single();
