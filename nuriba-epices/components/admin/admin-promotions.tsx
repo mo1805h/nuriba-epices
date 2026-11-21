@@ -93,7 +93,7 @@ export default function AdminPromotions() {
 
         {/* INFORMATION */}
         <p className="rounded-lg bg-cream p-3 text-xs leading-relaxed text-muted">
-          💡 Pour une réduction en %, utilisez « Promotions en % » ci-dessus. Le prix barré manuel d'un produit se règle dans l'onglet Produits (Ancien prix).
+          💡 Pour une réduction en %, utilisez « Promotions en % » ci-dessus. Le prix barré manuel d&apos;un produit se règle dans l&apos;onglet Produits (Ancien prix).
         </p>
 
       </div>
