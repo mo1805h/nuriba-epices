@@ -7,7 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { Product, SiteSettings } from "@/types";
+import { Pack, Product, SiteSettings } from "@/types";
 import { siteSettings as initialSettings } from "@/data/mock-data";
 import { supabase } from "@/lib/supabase";
 import { Promotion, Pricing, pricingFor } from "@/lib/promotions";
@@ -18,7 +18,7 @@ import { applyTheme, getTheme } from "@/lib/themes";
 // Products and site settings are managed through Supabase.
 // ---------------------------------------------------------------------------
 
-interface ProductRow {
+export interface ProductRow {
   id: string;
   slug: string;
   name: string;
@@ -35,6 +35,9 @@ interface ProductRow {
   in_stock: boolean;
   usage_tags: string[] | null;
   featured: boolean;
+  usage_ideas?: string | null;
+  recipe_title?: string | null;
+  recipe?: string | null;
 }
 
 function rowToProduct(row: ProductRow): Product {
@@ -55,6 +58,9 @@ function rowToProduct(row: ProductRow): Product {
     inStock: row.in_stock,
     usageTags: row.usage_tags ?? [],
     featured: row.featured,
+    usageIdeas: row.usage_ideas ?? null,
+    recipeTitle: row.recipe_title ?? null,
+    recipe: row.recipe ?? null,
   };
 }
 
@@ -75,6 +81,9 @@ function productToRow(product: Product) {
     in_stock: product.inStock,
     usage_tags: product.usageTags,
     featured: product.featured,
+    usage_ideas: product.usageIdeas ?? null,
+    recipe_title: product.recipeTitle ?? null,
+    recipe: product.recipe ?? null,
   };
 }
 
@@ -97,6 +106,9 @@ function productPatchToRow(patch: Partial<Product>) {
   if (patch.inStock !== undefined) row.in_stock = patch.inStock;
   if (patch.usageTags !== undefined) row.usage_tags = patch.usageTags;
   if (patch.featured !== undefined) row.featured = patch.featured;
+  if (patch.usageIdeas !== undefined) row.usage_ideas = patch.usageIdeas || null;
+  if (patch.recipeTitle !== undefined) row.recipe_title = patch.recipeTitle || null;
+  if (patch.recipe !== undefined) row.recipe = patch.recipe || null;
 
   return row;
 }
@@ -105,7 +117,7 @@ function productPatchToRow(patch: Partial<Product>) {
 // SUPABASE SETTINGS
 // ---------------------------------------------------------------------------
 
-interface SettingsRow {
+export interface SettingsRow {
   site_name: string;
   tagline: string;
   logo: string;
@@ -127,6 +139,11 @@ interface SettingsRow {
   promo_banner_active: boolean;
   bundle_banner_active: boolean;
   theme: string | null;
+  orange_money_number?: string | null;
+  orange_money_name?: string | null;
+  moov_money_number?: string | null;
+  moov_money_name?: string | null;
+  payment_instructions?: string | null;
 }
 
 function rowToSettings(row: SettingsRow): SiteSettings {
@@ -152,6 +169,11 @@ function rowToSettings(row: SettingsRow): SiteSettings {
     promoBannerActive: row.promo_banner_active,
     bundleBannerActive: row.bundle_banner_active ?? true,
     theme: row.theme ?? "default",
+    orangeMoneyNumber: row.orange_money_number ?? "",
+    orangeMoneyName: row.orange_money_name ?? "",
+    moovMoneyNumber: row.moov_money_number ?? "",
+    moovMoneyName: row.moov_money_name ?? "",
+    paymentInstructions: row.payment_instructions ?? "",
   };
 }
 
@@ -178,6 +200,11 @@ function settingsToRow(settings: SiteSettings) {
     promo_banner_active: settings.promoBannerActive,
     bundle_banner_active: settings.bundleBannerActive,
     theme: settings.theme,
+    orange_money_number: settings.orangeMoneyNumber || null,
+    orange_money_name: settings.orangeMoneyName || null,
+    moov_money_number: settings.moovMoneyNumber || null,
+    moov_money_name: settings.moovMoneyName || null,
+    payment_instructions: settings.paymentInstructions || null,
   };
 }
 
@@ -197,6 +224,15 @@ interface SettingsContextValue {
   promotions: Promotion[];
   reloadPromotions: () => Promise<void>;
   getPricing: (product: Product) => Pricing;
+  bundles: Pack[];
+  reloadBundles: () => Promise<void>;
+}
+
+export interface InitialSiteData {
+  settings?: SettingsRow | null;
+  products?: ProductRow[] | null;
+  promotions?: Promotion[] | null;
+  bundles?: Pack[] | null;
 }
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(
@@ -207,12 +243,37 @@ const SettingsContext = createContext<SettingsContextValue | undefined>(
 // SETTINGS PROVIDER
 // ---------------------------------------------------------------------------
 
-export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<SiteSettings>(initialSettings);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [productsLoading, setProductsLoading] = useState(true);
+export function SettingsProvider({
+  children,
+  initial,
+}: {
+  children: ReactNode;
+  initial?: InitialSiteData;
+}) {
+  // Server-provided data makes prices & products appear instantly (no loading flash)
+  const [settings, setSettings] = useState<SiteSettings>(
+    initial?.settings ? rowToSettings(initial.settings) : initialSettings
+  );
+  const [products, setProducts] = useState<Product[]>(
+    initial?.products ? initial.products.map(rowToProduct) : []
+  );
+  const [productsLoading, setProductsLoading] = useState(!initial?.products);
+  const [bundles, setBundles] = useState<Pack[]>(initial?.bundles ?? []);
+
+  async function reloadBundles() {
+    const { data } = await supabase
+      .from("bundles")
+      .select("*")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    setBundles((data as Pack[]) ?? []);
+  }
+
+  useEffect(() => {
+    reloadBundles();
+  }, []);
   const [hydrated, setHydrated] = useState(false);
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [promotions, setPromotions] = useState<Promotion[]>(initial?.promotions ?? []);
 
   async function reloadPromotions() {
     const { data } = await supabase
@@ -404,6 +465,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         promotions,
         reloadPromotions,
         getPricing,
+        bundles,
+        reloadBundles,
       }}
     >
       {children}

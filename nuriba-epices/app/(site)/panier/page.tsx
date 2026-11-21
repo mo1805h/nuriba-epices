@@ -1,29 +1,22 @@
 "use client";
 
-import { track } from "@/lib/track";
+import { useState } from "react";
+import CheckoutModal from "@/components/cart/checkout-modal";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { useCart } from "@/context/cart-context";
-import { useSettings } from "@/context/settings-context";
-import { formatFCFA, buildWhatsAppOrderUrl } from "@/lib/utils";
+import { formatFCFA } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, totalPrice } = useCart();
-  const { settings } = useSettings();
+
+  const [showCheckout, setShowCheckout] = useState(false);
 
   function handleOrder() {
     if (items.length === 0) return;
-    const url = buildWhatsAppOrderUrl(
-      settings.whatsappNumber,
-      items,
-      totalPrice
-    );
-    track("whatsapp_order", {
-      items: items.map((it) => ({ name: it.name, quantity: it.quantity })),
-    });
-    window.open(url, "_blank");
+    setShowCheckout(true);
   }
 
   return (
@@ -125,14 +118,15 @@ export default function CartPage() {
                 Commander sur WhatsApp
               </button>
               <p className="mt-3 text-center text-xs text-muted">
-                Aucun paiement en ligne. La commande est confirmée sur
-                WhatsApp.
+                Paiement par mobile money ou à la livraison. La commande est
+                confirmée sur WhatsApp.
               </p>
             </div>
           </div>
         )}
       </main>
       <Footer />
+      {showCheckout && <CheckoutModal onClose={() => setShowCheckout(false)} />}
     </>
   );
 }

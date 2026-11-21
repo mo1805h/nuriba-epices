@@ -4,7 +4,7 @@ import { CartProvider } from "@/context/cart-context";
 import { SettingsProvider } from "@/context/settings-context";
 import { getTheme, themeCss } from "@/lib/themes";
 import PageTracker from "@/components/analytics/page-tracker";
-import { JsonLd, SITE_URL, absoluteUrl, getSeoSettings } from "@/lib/seo";
+import { JsonLd, SITE_URL, absoluteUrl, getInitialSiteData } from "@/lib/seo";
 
 // NOTE: next/font/google requires network access at build time to fetch
 // font files. To keep this Phase 1 build resilient in any environment
@@ -13,7 +13,7 @@ import { JsonLd, SITE_URL, absoluteUrl, getSeoSettings } from "@/lib/seo";
 // To re-enable Google-hosted fonts, swap this back to next/font/google
 // once you have network access, or self-host the .woff2 files in /public/fonts.
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -59,7 +59,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSeoSettings();
+  const initial = await getInitialSiteData();
+  const settings = initial?.settings ?? null;
   const sameAs = [settings?.instagram_url, settings?.tiktok_url, settings?.facebook_url].filter(
     (u): u is string => !!u
   );
@@ -93,7 +94,7 @@ export default async function RootLayout({
       <body className="font-sans antialiased bg-page text-[#1C1C1C]">
         <JsonLd data={storeData} />
         <PageTracker />
-        <SettingsProvider>
+        <SettingsProvider initial={initial ?? undefined}>
           <CartProvider>{children}</CartProvider>
         </SettingsProvider>
       </body>

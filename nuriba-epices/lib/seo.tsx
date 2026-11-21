@@ -93,3 +93,26 @@ export function JsonLd({ data }: { data: object }) {
     />
   );
 }
+
+
+/** Everything the site needs on first render (fetched on the server). Never throws. */
+export async function getInitialSiteData() {
+  try {
+    const sb = serverClient();
+    if (!sb) return null;
+    const [settings, products, promotions, bundles] = await Promise.all([
+      sb.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+      sb.from("products").select("*").order("sort_order", { ascending: true }),
+      sb.from("promotions").select("*").order("created_at", { ascending: false }),
+      sb.from("bundles").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+    ]);
+    return {
+      settings: settings.data ?? null,
+      products: products.error ? null : products.data,
+      promotions: promotions.error ? null : promotions.data,
+      bundles: bundles.error ? null : bundles.data,
+    };
+  } catch {
+    return null;
+  }
+}

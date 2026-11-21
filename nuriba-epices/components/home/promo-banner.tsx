@@ -1,15 +1,25 @@
 "use client";
 
 import { useSettings } from "@/context/settings-context";
-import { bundles } from "@/data/mock-data";
 import { formatFCFA } from "@/lib/utils";
 import Link from "next/link";
 import { isRunning } from "@/lib/promotions";
 
 export default function PromoBanner() {
-  const { settings, promotions } = useSettings();
+  const { settings, promotions, bundles: packs, products } = useSettings();
   const running = promotions.filter((p) => isRunning(p) && p.show_banner);
-  const bundle = bundles[0];
+  const pack = packs.find((b) => b.active && b.items.length > 0);
+  const bundle = pack
+    ? {
+        name: pack.name,
+        description: pack.description ?? "",
+        price: pack.price,
+        oldPrice: pack.items.reduce(
+          (s, it) => s + (products.find((p) => p.id === it.product_id)?.price ?? 0) * it.quantity,
+          0
+        ),
+      }
+    : null;
 
   return (
     <section className="mx-auto max-w-7xl px-5 pt-6 md:px-8">

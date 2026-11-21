@@ -25,6 +25,9 @@ const EMPTY_PRODUCT: Product = {
   inStock: true,
   usageTags: [],
   featured: false,
+  usageIdeas: null,
+  recipeTitle: null,
+  recipe: null,
 };
 
 export default function AdminProducts() {
@@ -256,6 +259,36 @@ export default function AdminProducts() {
                         .filter(Boolean),
                     })
                   }
+                  className="admin-input"
+                />
+              </Field>
+
+              <Field label="💡 Idées d'utilisation (une par ligne)">
+                <textarea
+                  value={editing.usageIdeas ?? ""}
+                  onChange={(e) => setEditing({ ...editing, usageIdeas: e.target.value })}
+                  rows={5}
+                  placeholder={"• Riz gras\n• Poulet braisé\nAstuce : ..."}
+                  className="admin-input"
+                />
+              </Field>
+
+              <Field label="🍲 Titre de la recette">
+                <input
+                  type="text"
+                  value={editing.recipeTitle ?? ""}
+                  onChange={(e) => setEditing({ ...editing, recipeTitle: e.target.value })}
+                  placeholder="Ex : Poulet yassa"
+                  className="admin-input"
+                />
+              </Field>
+
+              <Field label="Étapes de la recette">
+                <textarea
+                  value={editing.recipe ?? ""}
+                  onChange={(e) => setEditing({ ...editing, recipe: e.target.value })}
+                  rows={6}
+                  placeholder={"1. ...\n2. ...\n3. ..."}
                   className="admin-input"
                 />
               </Field>

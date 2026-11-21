@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ProductCard from "@/components/products/product-card";
+import PacksSection from "@/components/products/packs-section";
 import { useSettings } from "@/context/settings-context";
 import { ProductCategory } from "@/types";
 
@@ -92,6 +93,7 @@ function ProductsContent() {
           </div>
         )}
       </section>
+      <PacksSection title="Nos packs à prix réduit" />
     </>
   );
 }

@@ -8,12 +8,13 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { CartItem, Product } from "@/types";
+import { CartItem, Pack, Product } from "@/types";
 import { useSettings } from "@/context/settings-context";
 
 interface CartContextValue {
   items: CartItem[];
   addItem: (product: Product, quantity?: number) => void;
+  addPack: (pack: Pack, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -29,10 +30,14 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const STORAGE_KEY = "nuriba-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { products, getPricing } = useSettings();
+  const { products, getPricing, bundles } = useSettings();
   const [storedItems, setItems] = useState<CartItem[]>([]);
   // Prices always follow the current product price + running promotions
   const items: CartItem[] = storedItems.map((i) => {
+    if (i.bundleId) {
+      const b = bundles.find((x) => x.id === i.bundleId);
+      return b ? { ...i, price: b.price, name: b.name, image: b.image || i.image } : i;
+    }
     const p = products.find((x) => x.id === i.productId);
     return p ? { ...i, price: getPricing(p).price, name: p.name, image: p.image } : i;
   });
@@ -83,6 +88,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsOpen(true);
   }
 
+  function addPack(pack: Pack, quantity = 1) {
+    track("add_to_cart", { items: [{ name: pack.name, quantity }] });
+    const key = "pack:" + pack.id;
+    setItems((prev) => {
+      const existing = prev.find((i) => i.productId === key);
+      if (existing) {
+        return prev.map((i) => (i.productId === key ? { ...i, quantity: i.quantity + quantity } : i));
+      }
+      const firstProduct = products.find((p) => p.id === pack.items[0]?.product_id);
+      return [
+        ...prev,
+        {
+          productId: key,
+          bundleId: pack.id,
+          name: pack.name,
+          price: pack.price,
+          image: pack.image || firstProduct?.image || "/images/logo.png",
+          quantity,
+        },
+      ];
+    });
+    setIsOpen(true);
+  }
+
   function removeItem(productId: string) {
     setItems((prev) => prev.filter((i) => i.productId !== productId));
   }
@@ -109,6 +138,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         items,
         addItem,
+        addPack,
         removeItem,
         updateQuantity,
         clearCart,

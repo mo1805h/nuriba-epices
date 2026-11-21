@@ -23,6 +23,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Sauces", "Viandes", "Soupes", "Marinades"],
     featured: true,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p2",
@@ -42,6 +45,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Riz", "Légumes", "Sauces", "Poissons"],
     featured: true,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p3",
@@ -61,6 +67,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Bœuf", "Mouton", "Grillades", "Ragoûts"],
     featured: true,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p4",
@@ -80,6 +89,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Poulet rôti", "Grillades", "Yassa", "Marinades"],
     featured: true,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p5",
@@ -99,6 +111,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Riz", "Légumes", "Poulet", "Sauces"],
     featured: true,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p6",
@@ -118,6 +133,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Viandes", "Sauces", "Omelettes", "Grillades"],
     featured: false,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
   {
     id: "p7",
@@ -137,6 +155,9 @@ export const products: Product[] = [
     inStock: true,
     usageTags: ["Riz", "Légumes", "Lait doré", "Soupes"],
     featured: false,
+    usageIdeas: null,
+    recipeTitle: null,
+    recipe: null,
   },
 ];
 
@@ -233,6 +254,12 @@ export const siteSettings: SiteSettings = {
 
   // PROMOTION 2: BUNDLE OFFER
   bundleBannerActive: true,
+
+  orangeMoneyNumber: "",
+  orangeMoneyName: "",
+  moovMoneyNumber: "",
+  moovMoneyName: "",
+  paymentInstructions: "",
 
   theme: "default",
 };

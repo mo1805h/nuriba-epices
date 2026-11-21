@@ -8,6 +8,7 @@ import AboutSection from "@/components/home/about-section";
 import Testimonials from "@/components/home/testimonials";
 import SocialPreview from "@/components/home/social-preview";
 import Faq from "@/components/home/faq";
+import PacksSection from "@/components/products/packs-section";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
         <Hero />
         <PromoBanner />
         <FeaturedProducts />
+        <PacksSection />
         <Categories />
         <AboutSection />
         <Testimonials />

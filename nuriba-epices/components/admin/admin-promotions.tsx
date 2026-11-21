@@ -2,6 +2,7 @@
 
 import { useSettings } from "@/context/settings-context";
 import AdminPromotionManager from "@/components/admin/admin-promotion-manager";
+import AdminPromoCodes from "@/components/admin/admin-promo-codes";
 
 export default function AdminPromotions() {
   const { settings, updateSettings } = useSettings();
@@ -13,6 +14,8 @@ export default function AdminPromotions() {
       </h2>
 
       <AdminPromotionManager />
+
+      <AdminPromoCodes />
 
       <h3 className="font-display text-lg font-bold text-deep-green">Bannières fixes</h3>
 
@@ -81,9 +84,7 @@ export default function AdminPromotions() {
           </label>
 
           <p className="rounded-lg bg-cream p-3 text-xs leading-relaxed text-muted">
-            💡 This banner displays your bundle name, description,
-            promotional price and original price. These details
-            are managed in your bundle data.
+            💡 Cette bannière affiche le premier pack visible (onglet 🎁 Packs) avec son prix et le prix normal.
           </p>
 
         </div>
@@ -92,9 +93,7 @@ export default function AdminPromotions() {
 
         {/* INFORMATION */}
         <p className="rounded-lg bg-cream p-3 text-xs leading-relaxed text-muted">
-          💡 The crossed-out price and promotional price for
-          individual products are managed separately in the
-          Products tab (Current Price and Old Price).
+          💡 Pour une réduction en %, utilisez « Promotions en % » ci-dessus. Le prix barré manuel d'un produit se règle dans l'onglet Produits (Ancien prix).
         </p>
 
       </div>

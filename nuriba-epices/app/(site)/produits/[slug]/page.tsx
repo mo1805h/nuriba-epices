@@ -128,6 +128,25 @@ export default function ProductDetailPage({
             </div>
           </div>
         </div>
+        {(product.usageIdeas || product.recipe) && (
+          <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+            {product.usageIdeas && (
+              <section className="rounded-2xl border border-border-soft bg-white p-6">
+                <h2 className="font-display text-xl font-bold text-deep-green">💡 Idées d&apos;utilisation</h2>
+                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#444]">{product.usageIdeas}</p>
+              </section>
+            )}
+            {product.recipe && (
+              <section className="rounded-2xl border border-border-soft bg-cream p-6">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-light-green">Recette</p>
+                <h2 className="font-display text-xl font-bold text-deep-green">
+                  🍲 {product.recipeTitle || `Recette au ${product.name}`}
+                </h2>
+                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#444]">{product.recipe}</p>
+              </section>
+            )}
+          </div>
+        )}
       </main>
       <Footer />
     </>

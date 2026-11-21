@@ -22,6 +22,22 @@ export interface Product {
   inStock: boolean;
   usageTags: string[];
   featured: boolean;
+  usageIdeas: string | null;
+  recipeTitle: string | null;
+  recipe: string | null;
+}
+
+/** A pack (bundle) stored in Supabase `bundles`. */
+export interface Pack {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  image: string | null;
+  items: { product_id: string; quantity: number }[];
+  price: number;
+  active: boolean;
+  sort_order: number;
 }
 
 export interface Bundle {
@@ -36,7 +52,9 @@ export interface Bundle {
 }
 
 export interface CartItem {
+  /** product id, or "pack:<bundle id>" for a pack */
   productId: string;
+  bundleId?: string;
   name: string;
   price: number;
   image: string;
@@ -80,6 +98,13 @@ export interface SiteSettings {
 
   // Promotion Banner 2: Bundle Offer
   bundleBannerActive: boolean;
+
+  // Mobile money (shown at checkout / thank-you page)
+  orangeMoneyNumber: string;
+  orangeMoneyName: string;
+  moovMoneyNumber: string;
+  moovMoneyName: string;
+  paymentInstructions: string;
 
   // Seasonal color theme id (see lib/themes.ts)
   theme: string;
