@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/cart-context";
 import { SettingsProvider } from "@/context/settings-context";
+import { JsonLd, SITE_URL, absoluteUrl, getSeoSettings } from "@/lib/seo";
 
 // NOTE: next/font/google requires network access at build time to fetch
 // font files. To keep this Phase 1 build resilient in any environment
@@ -10,32 +11,79 @@ import { SettingsProvider } from "@/context/settings-context";
 // To re-enable Google-hosted fonts, swap this back to next/font/google
 // once you have network access, or self-host the .woff2 files in /public/fonts.
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
-  title: "NURIBA Épices Naturelles | Ouagadougou, Burkina Faso",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "NURIBA Épices — Épices naturelles à Ouagadougou, Burkina Faso",
+    template: "%s | NURIBA Épices",
+  },
   description:
-    "Épices naturelles premium, importées avec passion. Poivre noir, Maji, épices viande, épices poulet, curry, paprika, curcuma. Livraison à Ouagadougou.",
+    "Épices naturelles premium à Ouagadougou : poivre noir, Maji, curry, paprika, curcuma, épices pour viande et poulet. Commande par WhatsApp, livraison à Ouagadougou, prix en FCFA.",
   keywords: [
+    "épices",
     "épices Ouagadougou",
-    "épices naturelles Burkina Faso",
+    "épices Burkina Faso",
+    "acheter épices Ouagadougou",
+    "épices naturelles",
+    "poivre noir Ouagadougou",
+    "curry",
+    "curcuma",
+    "paprika",
+    "Maji",
+    "épices viande",
+    "épices poulet",
     "NURIBA",
-    "épices premium",
   ],
+  applicationName: "NURIBA Épices",
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
-    title: "NURIBA — Épices Naturelles",
-    description: "La saveur qui transforme vos plats.",
-    locale: "fr_FR",
+    title: "NURIBA Épices — Épices naturelles à Ouagadougou",
+    description: "La saveur qui transforme vos plats. Épices naturelles premium livrées à Ouagadougou.",
+    url: "/",
+    siteName: "NURIBA Épices",
+    locale: "fr_BF",
     type: "website",
   },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSeoSettings();
+  const sameAs = [settings?.instagram_url, settings?.tiktok_url, settings?.facebook_url].filter(
+    (u): u is string => !!u
+  );
+  const storeData = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    name: "NURIBA Épices",
+    description: "Épices naturelles premium importées et vendues à Ouagadougou, Burkina Faso.",
+    url: SITE_URL,
+    logo: absoluteUrl(settings?.logo),
+    image: absoluteUrl(settings?.logo),
+    telephone: settings?.phone?.split("/")[0].trim() || "+226 70 54 56 57",
+    email: settings?.email || undefined,
+    currenciesAccepted: "XOF",
+    areaServed: { "@type": "City", name: "Ouagadougou" },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Ouagadougou",
+      addressCountry: "BF",
+    },
+    sameAs: sameAs.length ? sameAs : undefined,
+  };
   return (
     <html lang="fr">
       <body className="font-sans antialiased bg-[#FAF7F2] text-[#1C1C1C]">
+        <JsonLd data={storeData} />
         <SettingsProvider>
           <CartProvider>{children}</CartProvider>
         </SettingsProvider>
