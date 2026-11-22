@@ -447,8 +447,27 @@ export function SettingsProvider({
   }
 
   // Reset settings
+  /** Resets homepage texts & banners only. Contact details, WhatsApp number,
+   *  payment numbers, social links, logo and theme are always kept. */
   function resetToDefaults() {
-    setSettings(initialSettings);
+    setSettings((prev) => ({
+      ...initialSettings,
+      siteName: prev.siteName,
+      logo: prev.logo,
+      whatsappNumber: prev.whatsappNumber,
+      email: prev.email,
+      phone: prev.phone,
+      address: prev.address,
+      instagramUrl: prev.instagramUrl,
+      tiktokUrl: prev.tiktokUrl,
+      facebookUrl: prev.facebookUrl,
+      orangeMoneyNumber: prev.orangeMoneyNumber,
+      orangeMoneyName: prev.orangeMoneyName,
+      moovMoneyNumber: prev.moovMoneyNumber,
+      moovMoneyName: prev.moovMoneyName,
+      paymentInstructions: prev.paymentInstructions,
+      theme: prev.theme,
+    }));
   }
 
   return (

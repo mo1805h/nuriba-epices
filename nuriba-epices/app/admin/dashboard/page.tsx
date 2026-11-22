@@ -71,13 +71,13 @@ export default function AdminDashboardPage() {
           </Link>
           <button
             onClick={() => {
-              if (confirm("Réinitialiser le contenu du site (accueil, contact, promotions) aux valeurs par défaut ? Les produits ne sont pas concernés.")) {
+              if (confirm("Remettre les textes de l'accueil et les bannières aux valeurs d'origine ? Vos produits, votre numéro WhatsApp, vos coordonnées, vos numéros de paiement et votre thème sont conservés.")) {
                 resetToDefaults();
               }
             }}
             className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/70 hover:border-gold hover:text-gold"
           >
-            Réinitialiser
+            Réinitialiser les textes
           </button>
           <button
             onClick={handleLogout}
